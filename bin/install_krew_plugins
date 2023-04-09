@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+PLUGINS=(ns status cyclonus tree deprecations hns node-shell nodepools pod-inspect view-allocations pod-lens prune-unused unused-volumes)
+
+function is_plugin_installed() {
+    INSTALLED=$(kubectl krew list | grep $1 | wc -l)
+    if [[ ${INSTALLED} -eq 1 ]]; then 
+        echo true
+    else
+        echo false
+    fi
+}
+
+
+
+for ((i = 1; i <= $#PLUGINS; i++)) {
+    IS_INSTALLED=$(is_plugin_installed $PLUGINS[i])
+    
+    if [[ ${IS_INSTALLED} == false ]]; then 
+        kubectl krew install $PLUGINS[i]
+    else 
+        echo "Krew Plugin ($PLUGINS[i]): already installed"
+    fi
+}
+
+
+
+
